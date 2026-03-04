@@ -18,33 +18,25 @@ The API and AI engine server built extending Next.js server-side capabilities.
 
 ## 🚀 Getting Started
 
-To run the full stack locally, you need to start both services concurrently. Simply run the following at the root folder:
+To run the full stack locally, simply run:
+
 ```bash
 npm install
 npm run dev
 ```
-*(This uses npm workspaces to boot both `http://localhost:3000` and `http://localhost:3001` automatically).*
 
-## 🌍 Vercel Deployment (Zero-Error Monorepo Guide)
+Open [http://localhost:3000](http://localhost:3000) to view the application in your browser. All API endpoints natively resolve within the Next.js `app/api` directory.
 
-Because HormoFit is decoupled into two optimized microservices natively, you will create **TWO** projects in your Vercel Dashboard targeting this same repository:
+## 🌍 Vercel Deployment (One-Click Deploy)
 
-### 1. Deploy the Backend API Server
-1. Go to Vercel and **Add New Project**.
-2. Import this `HormoFit` repository.
-3. In the "Configure Project" screen, set the **Root Directory** to `backend`.
-4. Leave all build settings as default.
-5. Click **Deploy**.
-6. Once deployed, copy the production URL (e.g., `https://hormofit-backend.vercel.app`).
+Since HormoFit is natively configured as a single unified Next.js full-stack application, Vercel will deploy everything in **one single go** with zero errors.
 
-### 2. Deploy the Frontend Client
-1. Go back to Vercel and **Add New Project**.
-2. Import this generic `HormoFit` repository again.
-3. This time, set the **Root Directory** to `frontend`.
-4. Open the **Environment Variables** tab.
-5. Add a new variable: 
-   - **Key**: `NEXT_PUBLIC_API_URL`
-   - **Value**: The backend URL you copied in the previous step (e.g., `https://hormofit-backend.vercel.app`)
+### How to Deploy
+1. Push this repository to GitHub.
+2. Go to Vercel and **Add New Project**.
+3. Import your `HormoFit` repository.
+4. Leave the **Root Directory** untouched (default). Vercel will automatically detect `next build`.
+5. Add any necessary Environment Variables (like `MONGODB_URI` and `NEXTAUTH_SECRET`).
 6. Click **Deploy**.
 
-Your frontend is perfectly configured to dynamically proxy all `/api` requests to your deployed backend using Next.js Rewrites.
+That's it! Your Frontend React UI and Backend AI Twin Simulator APIs will instantly compile and deploy globally together.
