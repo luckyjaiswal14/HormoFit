@@ -1,6 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const UserSchema = new mongoose.Schema(
+export interface IUser extends Document {
+  name: string;
+  email: string;
+  password?: string;
+  height?: number; // In cm
+  age?: number;
+  pcodSeverity: 'Low' | 'Medium' | 'High';
+  irregularCycles: boolean;
+  hirsutism: boolean;
+  weightGain: boolean;
+  familyHistory: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const UserSchema = new Schema<IUser>(
   {
     name: {
       type: String,
@@ -34,4 +49,8 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.User || mongoose.model('User', UserSchema);
+// Index for performance
+UserSchema.index({ email: 1 });
+
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
+export default User;

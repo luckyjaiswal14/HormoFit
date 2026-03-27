@@ -1,6 +1,28 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const SimulationTrendSchema = new mongoose.Schema(
+export interface ISimulationTrend {
+    day: number;
+    value: number;
+}
+
+export interface IDigitalTwin extends Document {
+    userId: mongoose.Types.ObjectId;
+    bmi: number;
+    insulinResistanceScore: number;
+    cycleRegularityScore: number;
+    stressScore: number;
+    inflammationIndex: number;
+    adherenceScore: number;
+    weightTrend: ISimulationTrend[];
+    symptomTrend: ISimulationTrend[];
+    hormonalStabilityScore: number;
+    riskAlert: 'Low' | 'Medium' | 'High';
+    hasAvatar: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const SimulationTrendSchema = new Schema<ISimulationTrend>(
     {
         day: { type: Number, required: true },
         value: { type: Number, required: true },
@@ -8,10 +30,10 @@ const SimulationTrendSchema = new mongoose.Schema(
     { _id: false }
 );
 
-const DigitalTwinSchema = new mongoose.Schema(
+const DigitalTwinSchema = new Schema<IDigitalTwin>(
     {
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
             unique: true,
@@ -65,4 +87,7 @@ const DigitalTwinSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default mongoose.models.DigitalTwin || mongoose.model('DigitalTwin', DigitalTwinSchema);
+DigitalTwinSchema.index({ userId: 1 });
+
+const DigitalTwin: Model<IDigitalTwin> = mongoose.models.DigitalTwin || mongoose.model<IDigitalTwin>('DigitalTwin', DigitalTwinSchema);
+export default DigitalTwin;

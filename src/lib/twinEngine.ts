@@ -73,7 +73,7 @@ export async function processDailyLogAndUpdateTwin(data: LogPayload) {
     const stabilityScore = Math.max(0, 100 - penalty);
 
     // 7. Risk Alert
-    let riskAlert = 'Low';
+    let riskAlert: 'Low' | 'Medium' | 'High' = 'Low';
     if (stabilityScore < 40) riskAlert = 'High';
     else if (stabilityScore < 70) riskAlert = 'Medium';
 

@@ -1,7 +1,20 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const CommunityPostSchema = new mongoose.Schema({
-    authorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+export interface ICommunityPost extends Document {
+    authorId: mongoose.Types.ObjectId;
+    authorName: string;
+    title: string;
+    content: string;
+    upvotes: number;
+    aiTrustScore: number;
+    isVerified: boolean;
+    tags: string[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const CommunityPostSchema = new Schema<ICommunityPost>({
+    authorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     authorName: { type: String, required: true },
     title: { type: String, required: true },
     content: { type: String, required: true },
@@ -11,4 +24,8 @@ const CommunityPostSchema = new mongoose.Schema({
     tags: { type: [String], default: [] }
 }, { timestamps: true });
 
-export default mongoose.models.CommunityPost || mongoose.model('CommunityPost', CommunityPostSchema);
+CommunityPostSchema.index({ authorId: 1 });
+CommunityPostSchema.index({ createdAt: -1 });
+
+const CommunityPost: Model<ICommunityPost> = mongoose.models.CommunityPost || mongoose.model<ICommunityPost>('CommunityPost', CommunityPostSchema);
+export default CommunityPost;

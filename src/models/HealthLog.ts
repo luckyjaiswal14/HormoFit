@@ -1,9 +1,24 @@
-import mongoose from 'mongoose';
+import mongoose, { Document, Model, Schema } from 'mongoose';
 
-const HealthLogSchema = new mongoose.Schema(
+export interface IHealthLog extends Document {
+    userId: mongoose.Types.ObjectId;
+    date: Date;
+    weight: number;
+    symptoms: string[];
+    meals: string;
+    mood: 'Happy' | 'Calm' | 'Neutral' | 'Anxious' | 'Stressed' | 'Depressed';
+    sleepHours: number;
+    cycleStatus: 'Normal' | 'Irregular' | 'Period' | 'Ovulation';
+    dietScore: number;
+    workoutScore: number;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+const HealthLogSchema = new Schema<IHealthLog>(
     {
         userId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
@@ -56,4 +71,8 @@ const HealthLogSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default mongoose.models.HealthLog || mongoose.model('HealthLog', HealthLogSchema);
+// Index on userId and date for fetching chronological logs
+HealthLogSchema.index({ userId: 1, date: -1 });
+
+const HealthLog: Model<IHealthLog> = mongoose.models.HealthLog || mongoose.model<IHealthLog>('HealthLog', HealthLogSchema);
+export default HealthLog;

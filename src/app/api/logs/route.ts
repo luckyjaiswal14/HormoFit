@@ -38,12 +38,17 @@ export async function POST(req: Request) {
 
         // Fetch user to get height and pcod severity
         const user = await User.findById(userId);
+        if (!user) {
+            return NextResponse.json({ message: "User not found" }, { status: 404 });
+        }
+
+        const heightCm = user.height || 160;
 
         // Call Twin Engine
         const updatedTwin = await processDailyLogAndUpdateTwin({
             userId,
             weight,
-            heightCm: user.height,
+            heightCm,
             pcodSeverity: user.pcodSeverity,
             dietScore,
             workoutScore,
